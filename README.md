@@ -1,3 +1,3 @@
-Project-REST-rant
+# Project REST-Rant
 
-an inside look into breads
+REST-Rant is an app where users can review restaurants.
