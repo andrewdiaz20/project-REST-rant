@@ -6,9 +6,19 @@ function new_form () {
         <Def>
           <main>
             <h1>Add a New Place</h1>
+            <form method="POST" action="/places">
+  <div>
+    <label>Place Name</label>
+    <input />
+  </div>
+</form>
+
           </main>
         </Def>
     )
 }
+
+module.exports = new_form
+
 
 module.exports = new_form
