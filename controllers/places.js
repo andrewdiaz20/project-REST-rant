@@ -10,13 +10,10 @@ router.get('/:id', (req, res) => {
       res.render('error404')
     }
     else {
-        res.render('places/show', { place: places[id] })
-
+      res.render('places/show', { place: places[id], id })
     }
 })
   
-  
-
 router.post('/', (req, res) => {
     console.log(req.body)
     if (!req.body.pic) {
@@ -66,6 +63,14 @@ let placesFormatted = data.places.map((place) => {
         <p className="text-center">
           Located in {place.city}, {place.state}
         </p>
+        <a href={`/places/${data.id}/edit`} className="btn btn-warning"> 
+  Edit
+</a> 
+<form method="POST" action={`/places/${data.id}?_method=DELETE`}> 
+  <button type="submit" className="btn btn-danger">
+    Delete
+  </button>
+</form> 
       </div>
     )
 })
@@ -90,6 +95,22 @@ router.post('/', (req, res) => {
     console.log(req.body)
     res.send('POST /places')
 })
+
+router.delete('/:id', (req, res) => {
+    let id = Number(req.params.id)
+    if (isNaN(id)) {
+      res.render('error404')
+    }
+    else if (!places[id]) {
+      res.render('error404')
+    }
+    else {
+      places.splice(id, 1)
+      res.redirect('/places')
+    }
+})
+  
+  
   
   
   

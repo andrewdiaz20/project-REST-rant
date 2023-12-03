@@ -1,7 +1,7 @@
 // Modules and Globals
 require('dotenv').config()
 const express = require('express')
-const app = express()
+const methodOverride = require('method-override')
 
 // Express Settings
 app.set('views', __dirname + '/views')
@@ -9,7 +9,8 @@ app.set('view engine', 'jsx')
 app.engine('jsx', require('express-react-views').createEngine())
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
-app.use()
+app.use(methodOverride('_method'))
+
 
 // Controllers & Routes
 app.use('/places', require('./controllers/places'))
@@ -40,6 +41,16 @@ let placesFormatted = data.places.map((place, index) => {
       <p className="text-center">
         Located in {place.city}, {place.state}
       </p>
+      <a href="" className="btn btn-warning"> 
+  Edit
+</a>  
+<form method="POST" action=""> 
+  <button type="submit" className="btn btn-danger">
+    Delete
+  </button>
+</form>     
+
+
     </div>
   )
 })
