@@ -1,7 +1,100 @@
-// Modules and Globals
+const router = require('express').Router()
+const db = require('../models')
+
+router.get('/', (req, res) => {
+    db.Place.find()
+    .then((places) => {
+      res.render('places/index', { places })
+    })
+    .catch(err => {
+      console.log(err) 
+      res.render('error404')
+    })
+})
+
+
+
+
 require('dotenv').config()
-const express = require('express')
-const methodOverride = require('method-override')
+const mongoose = require('mongoose')
+
+router.get('/:id', (req, res) => {
+  db.Place.findById(req.params.id)
+  .then(place => {
+      res.render('places/show', { place })
+  })
+  .catch(err => {
+      console.log('err', err)
+      res.render('error404')
+  })
+})
+
+
+
+router.post('/', (req, res) => {
+  db.Place.create(req.body)
+  .then(() => {
+      res.redirect('/places')
+  })
+  .catch(err => {
+      console.log('err', err)
+      res.render('error404')
+  })
+})
+
+
+router.get('/new', (req, res) => {
+  res.render('places/new')
+})
+
+router.get('/:id', (req, res) => {
+  res.send('GET /places/:id stub')
+})
+
+router.put('/:id', (req, res) => {
+  res.send('PUT /places/:id stub')
+})
+
+router.delete('/:id', (req, res) => {
+  res.send('DELETE /places/:id stub')
+})
+
+router.get('/:id/edit', (req, res) => {
+  res.send('GET edit form stub')
+})
+
+router.post('/:id/rant', (req, res) => {
+  res.send('GET /places/:id/rant stub')
+})
+
+router.delete('/:id/rant/:rantId', (req, res) => {
+    res.send('GET /places/:id/rant/:rantId stub')
+})
+
+module.exports = router
+
+
+const placeSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  pic: String,
+  cuisines: { type: String, required: true },
+  city: { type: String, default: 'Anytown' },
+  state: { type: String, default: 'USA' },
+  founded: Number
+})
+
+module.exports = mongoose.model('Place', placeSchema)
+
+
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true
+})
+
+
+module.exports.Place = require('./places')
+
 
 // Express Settings
 app.set('views', __dirname + '/views')
@@ -57,9 +150,6 @@ let placesFormatted = data.places.map((place, index) => {
     Delete
   </button>
 </form> 
- 
-
-
     </div>
   )
 })
