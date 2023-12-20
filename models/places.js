@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 
+const placeSchema = new mongoose.Schema()
+
+
 const placeSchema = new mongoose.Schema({
   name: { type: String, required: true },
   pic: { type: String, default: 'http://placekitten.com/350/350' },
@@ -22,21 +25,27 @@ placeSchema.methods.showEstablished = function() {
 
 module.exports = mongoose.model('Place', placeSchema)
 
-router.post('/', (req, res) => {
-  if (!req.body.pic) {
-    // Default image if one is not provided
-    req.body.pic = 'http://placekitten.com/400/400'
-  }
-
-  db.Place.create(req.body)
-  .then(() => {
-      res.redirect('/places')
+router.post('/:id/comment', (req, res) => {
+  console.log(req.body)
+  db.Place.findById(req.params.id)
+  .then(place => {
+      db.Comment.create(req.body)
+      .then(comment => {
+          place.comments.push(comment.id)
+          place.save()
+          .then(() => {
+              res.redirect(`/places/${req.params.id}`)
+          })
+      })
+      .catch(err => {
+          res.render('error404')
+      })
   })
   .catch(err => {
-      console.log('err', err)
       res.render('error404')
   })
 })
+
 
 
 router.get('/:id', (req, res) => {
@@ -51,6 +60,7 @@ router.get('/:id', (req, res) => {
       res.render('error404')
   })
 })
+
 
 if (err && err.name == 'ValidationError') {
   let message = 'Validation Error: '
